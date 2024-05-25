@@ -1,0 +1,26 @@
+---
+interface Props {
+  link: string;
+  title: string;
+  subtitle: string;
+}
+
+const { link, title, subtitle } = Astro.props;
+---
+
+<a
+  href={link}
+  class="flex items-center max-w-sm p-6 bg-gray-50 rounded-lg drop-shadow hover:-translate-y-2 hover:drop-shadow-xl duration-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+>
+  <slot />
+  <div>
+    <h5
+      class="mb-2 text-2xl font-bold tracking-tight text-gray-700 dark:text-gray-300"
+    >
+      {title}
+    </h5>
+    <p class="font-normal text-gray-500 dark:text-gray-400">
+      {subtitle}
+    </p>
+  </div>
+</a>

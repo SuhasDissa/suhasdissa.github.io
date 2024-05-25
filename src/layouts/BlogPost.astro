@@ -1,0 +1,94 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+
+type Props = CollectionEntry<"blog">["data"];
+
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+
+  <body>
+    <Header />
+    <main
+      class="pt-8 pb-16 lg:pt-16 lg:pb-24 bg-gray-50 dark:bg-gray-900 antialiased"
+    >
+      <div class="flex justify-between px-4 mx-auto max-w-screen-2xl">
+        <article
+          class="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert"
+        >
+          <header class="mb-4 lg:mb-6 not-format">
+            <address class="flex items-center mb-6 not-italic">
+              <div
+                class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-gray-50"
+              >
+                <img
+                  class="mr-4 w-16 h-16 rounded-full"
+                  src="https://avatars.githubusercontent.com/u/64766434?v=4"
+                  alt="Suhas Dissanayake"
+                />
+                <div>
+                  <a
+                    href="#"
+                    rel="author"
+                    class="text-xl font-bold text-gray-900 dark:text-gray-50"
+                    >Suhas Dissanayake</a
+                  >
+                  <p class="text-base text-gray-500 dark:text-gray-400">
+                    Android app developer
+                  </p>
+                  <p class="text-base text-gray-500 dark:text-gray-400">
+                    <FormattedDate date={pubDate} />
+                  </p>
+                  {
+                    updatedDate && (
+                      <p class="text-base text-gray-500 dark:text-gray-400">
+                        Last updated on <FormattedDate date={updatedDate} />
+                      </p>
+                    )
+                  }
+                </div>
+              </div>
+            </address>
+            <h1
+              class="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-gray-50"
+            >
+              {title}
+            </h1>
+          </header>
+          <div class="rounded-3xl overflow-clip shadow-lg">
+            {
+              heroImage && (
+                <img width={1020} height={510} src={heroImage} alt="" />
+              )
+            }
+          </div>
+          <div class="article-content">
+            <style is:inline>
+              div.article-content img {
+                border-radius: 1rem;
+                outline: 4px dotted #d1d5db;
+                border: 4px solid transparent;
+              }
+              @media (prefers-color-scheme: dark) {
+                div.article-content img {
+                  outline: 4px dotted #374151;
+                  filter: brightness(0.75);
+                }
+              }
+            </style>
+            <slot />
+          </div>
+        </article>
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>

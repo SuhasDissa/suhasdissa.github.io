@@ -1,0 +1,113 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import SocialCard from "../components/SocialCard.astro";
+import DiscordIcon from "../components/icons/DiscordIcon.astro";
+import GithubIcon from "../components/icons/GithubIcon.astro";
+import GitlabIcon from "../components/icons/GitlabIcon .astro";
+import MatrixIcon from "../components/icons/MatrixIcon.astro";
+import TwitterIcon from "../components/icons/TwitterIcon.astro";
+import UnsplashIcon from "../components/icons/UnsplashIcon.astro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main class="mx-auto max-w-screen-xl min-h-screen">
+      <section class="bg-gray-50 dark:bg-gray-900">
+        <div
+          class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12"
+        >
+          <div class="mr-auto place-self-center lg:col-span-7">
+            <h1
+              class="text-gray-700 dark:text-gray-300 text-3xl sm:text-4xl md:text-5xl"
+            >
+              Hi, I'm Suhas Dissanayake
+            </h1>
+            <p
+              class="text-gray-400 text-xl sm:text-2xl md:text-4xl max-w-prose pt-4 sm:pt-8"
+            >
+              I am a 20-year-old Android app developer from Sri Lanka. I am also
+              passionate about graphics design, and I have been using Arch Linux
+              for many years.
+            </p>
+          </div>
+          <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-full shadow-xl">
+              <img
+                class="rounded-full p-4"
+                src="https://avatars.githubusercontent.com/u/64766434?v=4"
+                alt="mockup"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="pt-40 pb-20">
+        <h2
+          class="text-slate-600 dark:text-slate-400 text-2xl sm:text-3xl md:text-5xl"
+        >
+          Social Media Links
+        </h2>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-flow-row gap-4 pt-4 sm:pt-8"
+        >
+          <SocialCard
+            title={"Suhas Dissanayake"}
+            subtitle={"SuhasDissa"}
+            link={"https://github.com/SuhasDissa/"}
+          >
+            <GithubIcon />
+          </SocialCard>
+
+          <SocialCard
+            title={"Suhas Dissanayake"}
+            subtitle={"@suhas_d"}
+            link={"https://matrix.to/#/@suhas_d:matrix.org"}
+          >
+            <MatrixIcon />
+          </SocialCard>
+
+          <SocialCard
+            title={"Suhas Dissanayake"}
+            subtitle={"SuhasDissa"}
+            link={"https://github.com/SuhasDissa/"}
+          >
+            <TwitterIcon />
+          </SocialCard>
+
+          <SocialCard
+            title={"Suhas Dissanayake"}
+            subtitle={"suhasdissa"}
+            link={"https://discordapp.com/users/924165265258844180"}
+          >
+            <DiscordIcon />
+          </SocialCard>
+
+          <SocialCard
+            title={"Suhas Dissanayake"}
+            subtitle={"@suhasdissa"}
+            link={"https://unsplash.com/@suhasdissa"}
+          >
+            <UnsplashIcon />
+          </SocialCard>
+
+          <SocialCard
+            title={"Suhas Dissanayake"}
+            subtitle={"SuhasDissa"}
+            link={"https://gitlab.com/SuhasDissa"}
+          >
+            <GitlabIcon />
+          </SocialCard>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
