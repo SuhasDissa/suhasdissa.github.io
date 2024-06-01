@@ -19,7 +19,7 @@ numbers](https://en.wikipedia.org/wiki/E_number))
 For the consumer's to find the exact ingredients used in a product, they
 will have to look up these E-numbers, which can be a tiresome and
 frustrating process. So, In order to simplify this process, I made the
-**Food-E App.**
+[**Food-E App**](https://github.com/SuhasDissa/Food-E-App).
 
 ## App Features
 
