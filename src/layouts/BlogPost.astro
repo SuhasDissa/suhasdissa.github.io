@@ -10,7 +10,7 @@ type Props = CollectionEntry<"blog">["data"];
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="en" class="bg-gray-50 dark:bg-gray-900">
   <head>
     <BaseHead title={title} description={description} />
   </head>
@@ -18,7 +18,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
   <body>
     <Header />
     <main
-      class="pt-8 pb-16 lg:pt-16 lg:pb-24 bg-gray-50 dark:bg-gray-900 antialiased"
+      class="pt-8 pb-16 lg:pt-16 lg:pb-24 antialiased"
     >
       <div class="flex justify-between px-4 mx-auto max-w-screen-2xl">
         <article
