@@ -129,8 +129,10 @@ import LinkedInIcon from "../components/icons/LinkedInIcon.astro";
         const now = new Date();
         let age = now.getFullYear() - birthYear;
         if (now.getMonth() < birthMonth) age--;
-
-        document.getElementById("age").textContent = age;
+        let elem = document.getElementById("age")
+        if(elem){
+          elem.innerHTML = age.toString();
+        }
       });
     </script>
   </body>
