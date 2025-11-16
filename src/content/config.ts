@@ -10,6 +10,9 @@ const blog = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     heroImage: z.string().optional(),
+    // SEO enhancements
+    author: z.string().default("Suhas Dissanayake"),
+    keywords: z.array(z.string()).optional(),
   }),
 });
 
@@ -23,6 +26,9 @@ const projects = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     heroImage: z.string().optional(),
+    // SEO enhancements
+    author: z.string().default("Suhas Dissanayake"),
+    keywords: z.array(z.string()).optional(),
   }),
 });
 
@@ -35,6 +41,10 @@ const garden = defineCollection({
     // Transform string to Date object
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
+    heroImage: z.string().optional(),
+    // SEO enhancements
+    author: z.string().default("Suhas Dissanayake"),
+    keywords: z.array(z.string()).optional(),
   }),
 });
 
@@ -47,6 +57,10 @@ const tips = defineCollection({
     // Transform string to Date object
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
+    heroImage: z.string().optional(),
+    // SEO enhancements
+    author: z.string().default("Suhas Dissanayake"),
+    keywords: z.array(z.string()).optional(),
   }),
 });
 

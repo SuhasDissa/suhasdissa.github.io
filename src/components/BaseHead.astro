@@ -2,16 +2,96 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
+import { SITE_TITLE, AUTHOR_NAME, AUTHOR_IMAGE, AUTHOR_URL, AUTHOR_SOCIAL } from '../consts';
 
 interface Props {
 	title: string;
 	description: string;
 	image?: string;
+	// Article-specific metadata
+	type?: 'website' | 'article';
+	pubDate?: Date;
+	updatedDate?: Date;
+	author?: string;
+	keywords?: string[];
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/me.jpg' } = Astro.props;
+const {
+	title,
+	description,
+	image = '/me.jpg',
+	type = 'website',
+	pubDate,
+	updatedDate,
+	author = AUTHOR_NAME,
+	keywords = [],
+} = Astro.props;
+
+// Generate JSON-LD structured data
+const jsonLD = {
+	'@context': 'https://schema.org',
+	'@type': type === 'article' ? 'Article' : 'WebSite',
+	headline: title,
+	description: description,
+	image: new URL(image, Astro.site).toString(),
+	url: canonicalURL.toString(),
+	...(type === 'article' && pubDate ? {
+		author: {
+			'@type': 'Person',
+			name: author,
+			url: AUTHOR_URL,
+			image: AUTHOR_IMAGE,
+		},
+		publisher: {
+			'@type': 'Person',
+			name: AUTHOR_NAME,
+			url: AUTHOR_URL,
+			image: AUTHOR_IMAGE,
+		},
+		datePublished: pubDate.toISOString(),
+		dateModified: (updatedDate || pubDate).toISOString(),
+		mainEntityOfPage: {
+			'@type': 'WebPage',
+			'@id': canonicalURL.toString(),
+		},
+	} : {
+		name: SITE_TITLE,
+		author: {
+			'@type': 'Person',
+			name: AUTHOR_NAME,
+			url: AUTHOR_URL,
+			image: AUTHOR_IMAGE,
+		},
+	}),
+};
+
+// Breadcrumb JSON-LD for articles
+const breadcrumbLD = type === 'article' ? {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{
+			'@type': 'ListItem',
+			position: 1,
+			name: 'Home',
+			item: Astro.site?.toString(),
+		},
+		{
+			'@type': 'ListItem',
+			position: 2,
+			name: 'Blog',
+			item: new URL('/blog', Astro.site).toString(),
+		},
+		{
+			'@type': 'ListItem',
+			position: 3,
+			name: title,
+			item: canonicalURL.toString(),
+		},
+	],
+} : null;
 ---
 
 <!-- Global Metadata -->
@@ -19,6 +99,8 @@ const { title, description, image = '/me.jpg' } = Astro.props;
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/png" href="/favicon.png" />
 <meta name="generator" content={Astro.generator} />
+<meta name="theme-color" content="#111827" />
+<html lang="en" />
 
 <!-- Font preloads -->
 <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
@@ -31,20 +113,42 @@ const { title, description, image = '/me.jpg' } = Astro.props;
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="author" content={author} />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+
+<!-- Article-specific meta tags -->
+{type === 'article' && pubDate && (
+	<>
+		<meta property="article:published_time" content={pubDate.toISOString()} />
+		{updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
+		<meta property="article:author" content={author} />
+		{keywords.map((keyword) => <meta property="article:tag" content={keyword} />)}
+	</>
+)}
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={type} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:locale" content="en_US" />
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={Astro.url} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
+<meta name="twitter:image:alt" content={title} />
+<meta name="twitter:creator" content={AUTHOR_SOCIAL.twitter} />
+<meta name="twitter:site" content={AUTHOR_SOCIAL.twitter} />
+
+<!-- JSON-LD Structured Data for Rich Results -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLD)} />
+{breadcrumbLD && <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLD)} />}
 
 <!-- Sitemap -->
 <link rel="sitemap" href="/sitemap-index.xml" />
