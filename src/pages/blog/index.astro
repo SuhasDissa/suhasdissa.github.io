@@ -26,11 +26,11 @@ const posts = (await getCollection("blog")).sort(
           {
             posts.map((post) => (
               <div class="max-w-sm bg-gray-50 rounded-xl drop-shadow hover:drop-shadow-xl hover:-translate-y-2 duration-100 dark:bg-gray-800">
-                <a href={`/blog/${post.slug}/`}>
+                <a href={`/blog/${post.id}/`}>
                   <img class="rounded-t-lg" src={post.data.heroImage} alt="" />
                 </a>
                 <div class="p-5">
-                  <a href={`/blog/${post.slug}/`}>
+                  <a href={`/blog/${post.id}/`}>
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                       {post.data.title}
                     </h5>

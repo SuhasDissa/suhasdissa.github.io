@@ -1,16 +1,15 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://suhasdissa.top",
+
   integrations: [
     mdx(),
     sitemap({
-      // Customize URLs with priority and changefreq
-      customPages: [],
       filter: (page) => {
         // Exclude any pages you don't want in sitemap
         return !page.includes('/404') && !page.includes('/private');
@@ -48,6 +47,9 @@ export default defineConfig({
         return item;
       },
     }),
-    tailwind(),
   ],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
