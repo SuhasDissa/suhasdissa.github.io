@@ -26,9 +26,9 @@ const garden = defineCollection({
   schema,
 });
 
-const tips = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/tips" }),
+const achievements = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/achievements" }),
   schema,
 });
 
-export const collections = { blog, projects, garden, tips };
+export const collections = { blog, projects, garden, achievements };

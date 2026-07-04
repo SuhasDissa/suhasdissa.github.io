@@ -48,7 +48,7 @@ const garden = defineCollection({
   }),
 });
 
-const tips = defineCollection({
+const achievements = defineCollection({
   type: "content",
   // Type-check frontmatter using a schema
   schema: z.object({
@@ -68,5 +68,5 @@ export const collections = {
   blog: blog,
   projects: projects,
   garden: garden,
-  tips: tips,
+  achievements: achievements,
 };
