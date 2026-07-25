@@ -50,12 +50,20 @@ import SlideShareIcon from "../components/icons/SlideShareIcon.astro";
               </p>
             </div>
           </div>
-          <div class="hidden lg:block lg:col-span-5">
-            <img
-              class="rounded-2xl w-full object-cover shadow-lg"
-              src="/my_photo.avif"
-              alt="Suhas Dissanayake"
-            />
+          <div class="hidden lg:col-span-5 lg:block">
+            <div class="photo-ambiance relative" data-photo-ambiance>
+              <canvas
+                class="ambiance-glow"
+                data-ambiance-glow
+                aria-hidden="true"
+              ></canvas>
+              <img
+                class="relative z-10 rounded-2xl w-full object-cover shadow-lg"
+                src="/my_photo.avif"
+                alt="Suhas Dissanayake"
+                data-ambiance-photo
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -169,3 +177,117 @@ import SlideShareIcon from "../components/icons/SlideShareIcon.astro";
     <Footer />
   </body>
 </html>
+
+<style>
+  .ambiance-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    filter: blur(36px);
+    transition: opacity 0.7s ease;
+  }
+
+  .ambiance-glow.is-ready {
+    opacity: 0.85;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .ambiance-glow.is-ready {
+      opacity: 0.7;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ambiance-glow.is-ready {
+      animation: ambiance-breathe 12s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes ambiance-breathe {
+    from {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+      transform: translate(-50%, -50%) scale(1.025);
+    }
+  }
+</style>
+
+<script>
+  function paintContinuousGlow(
+    glow: HTMLCanvasElement,
+    photo: HTMLImageElement,
+  ) {
+    const displayW = photo.clientWidth;
+    const displayH = photo.clientHeight;
+    if (!displayW || !displayH) return;
+
+    const pad = Math.round(Math.min(displayW, displayH) * 0.2);
+    const w = displayW + pad * 2;
+    const h = displayH + pad * 2;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    glow.width = Math.round(w * dpr);
+    glow.height = Math.round(h * dpr);
+    glow.style.width = `${w}px`;
+    glow.style.height = `${h}px`;
+
+    const ctx = glow.getContext("2d");
+    if (!ctx) return;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    // Continuous ambient: blurred copies of the photo bleed outward as one halo
+    const baseBlur = Math.round(Math.min(displayW, displayH) * 0.06);
+
+    ctx.filter = `blur(${baseBlur}px) saturate(1.4) brightness(1.06)`;
+    ctx.drawImage(photo, pad, pad, displayW, displayH);
+
+    ctx.globalAlpha = 0.55;
+    ctx.filter = `blur(${Math.round(baseBlur * 1.8)}px) saturate(1.5)`;
+    const grow = pad * 0.4;
+    ctx.drawImage(
+      photo,
+      pad - grow,
+      pad - grow,
+      displayW + grow * 2,
+      displayH + grow * 2,
+    );
+    ctx.globalAlpha = 1;
+    ctx.filter = "none";
+
+    glow.classList.add("is-ready");
+  }
+
+  function applyAmbiance(root: HTMLElement) {
+    const photo = root.querySelector<HTMLImageElement>("[data-ambiance-photo]");
+    const glow = root.querySelector<HTMLCanvasElement>("[data-ambiance-glow]");
+    if (!photo || !glow) return;
+
+    const paint = () => {
+      try {
+        if (!photo.naturalWidth || !photo.naturalHeight) return;
+        paintContinuousGlow(glow, photo);
+      } catch {
+        // Decode / canvas failure — leave glow hidden
+      }
+    };
+
+    const start = () => {
+      paint();
+      new ResizeObserver(() => paint()).observe(photo);
+    };
+
+    if (photo.complete && photo.naturalWidth > 0) start();
+    else photo.addEventListener("load", start, { once: true });
+  }
+
+  document
+    .querySelectorAll<HTMLElement>("[data-photo-ambiance]")
+    .forEach(applyAmbiance);
+</script>
